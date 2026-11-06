@@ -5,6 +5,7 @@
 !/.python-version
 !/pyproject.toml
 !/uv.lock
+!/README.md
 
 !/bouncing/
 /bouncing/*
