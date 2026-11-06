@@ -1,0 +1,192 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="930" viewBox="0 0 1400 930" font-family="Helvetica Neue, Hiragino Sans, Arial, sans-serif" font-size="15">
+<defs>
+  <marker id="ar" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#52514e"/></marker>
+  <marker id="arb" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/></marker>
+  <marker id="aro" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#eb6834"/></marker>
+  <marker id="arg" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#1baf7a"/></marker>
+</defs>
+<rect width="1400" height="930" fill="#fcfcfb"/>
+
+<!-- ===== 共通の流れ ===== -->
+<text x="24" y="34" font-size="20" font-weight="bold" fill="#0b0b0b">共通の流れ（models/common.py）— 3 モデルは二重枠の中だけが違う</text>
+
+<!-- input -->
+<rect x="24" y="70" width="190" height="78" rx="6" fill="#fff" stroke="#52514e" stroke-width="1.5"/>
+<text x="119" y="96" text-anchor="middle" font-weight="bold">各フレームの入力</text>
+<text x="119" y="118" text-anchor="middle" fill="#52514e">座標 6 + 速度 6 = 12 個</text>
+<text x="119" y="138" text-anchor="middle" fill="#52514e">× 500 フレーム</text>
+
+<line x1="214" y1="109" x2="258" y2="109" stroke="#52514e" stroke-width="1.5" marker-end="url(#ar)"/>
+
+<rect x="260" y="70" width="190" height="78" rx="6" fill="#fff" stroke="#52514e" stroke-width="1.5"/>
+<text x="355" y="96" text-anchor="middle" font-weight="bold">InputEmbedding</text>
+<text x="355" y="118" text-anchor="middle" fill="#52514e">Linear 12 → 128</text>
+<text x="355" y="138" text-anchor="middle" fill="#52514e">emb: (T, 128)</text>
+
+<line x1="450" y1="109" x2="494" y2="109" stroke="#52514e" stroke-width="1.5" marker-end="url(#ar)"/>
+
+<!-- model-specific -->
+<rect x="496" y="62" width="250" height="94" rx="8" fill="#fff" stroke="#0b0b0b" stroke-width="3"/>
+<rect x="502" y="68" width="238" height="82" rx="6" fill="none" stroke="#0b0b0b" stroke-width="1"/>
+<text x="621" y="96" text-anchor="middle" font-weight="bold">状態の作り方（モデル別）</text>
+<text x="621" y="118" text-anchor="middle" fill="#52514e">emb (T,128) → h (T, h_dim)</text>
+<text x="621" y="138" text-anchor="middle" fill="#52514e">フレームごとに 1 つの状態</text>
+
+<line x1="746" y1="109" x2="790" y2="109" stroke="#52514e" stroke-width="1.5" marker-end="url(#ar)"/>
+
+<rect x="792" y="70" width="150" height="78" rx="6" fill="#fff" stroke="#52514e" stroke-width="1.5"/>
+<text x="867" y="96" text-anchor="middle" font-weight="bold">h_t = h[t]</text>
+<text x="867" y="118" text-anchor="middle" fill="#52514e">質問の時刻だけ</text>
+<text x="867" y="138" text-anchor="middle" fill="#52514e">取り出す</text>
+
+<line x1="942" y1="109" x2="986" y2="109" stroke="#52514e" stroke-width="1.5" marker-end="url(#ar)"/>
+
+<!-- readout -->
+<rect x="988" y="56" width="250" height="106" rx="6" fill="#fff" stroke="#52514e" stroke-width="1.5"/>
+<text x="1113" y="82" text-anchor="middle" font-weight="bold">Readout</text>
+<text x="1113" y="104" text-anchor="middle" fill="#52514e">concat[ h_t , q , emb[t] ]</text>
+<text x="1113" y="124" text-anchor="middle" fill="#52514e">→ MLP → 3 ロジット</text>
+<text x="1113" y="146" text-anchor="middle" fill="#52514e">無効な選択肢は −1e9</text>
+
+<line x1="1238" y1="109" x2="1282" y2="109" stroke="#52514e" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="1284" y="70" width="96" height="78" rx="6" fill="#fff" stroke="#52514e" stroke-width="1.5"/>
+<text x="1332" y="100" text-anchor="middle" font-weight="bold">softmax</text>
+<text x="1332" y="122" text-anchor="middle" fill="#52514e">答えの確率</text>
+<text x="1332" y="140" text-anchor="middle" fill="#52514e" font-size="13">最大値 = 確信</text>
+
+<!-- question path -->
+<rect x="792" y="200" width="190" height="60" rx="6" fill="#fff" stroke="#52514e" stroke-width="1.5"/>
+<text x="887" y="224" text-anchor="middle" font-weight="bold">質問 (qtype, ball, cond)</text>
+<text x="887" y="246" text-anchor="middle" fill="#52514e">整数 3 つ、文にしない</text>
+<line x1="982" y1="230" x2="1010" y2="230" stroke="#52514e" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="1012" y="200" width="236" height="60" rx="6" fill="#fff" stroke="#52514e" stroke-width="1.5"/>
+<text x="1130" y="224" text-anchor="middle" font-weight="bold">QuestionEmbedding</text>
+<text x="1130" y="246" text-anchor="middle" fill="#52514e">3 つの埋め込み表の和 → q (128)</text>
+<line x1="1112" y1="200" x2="1112" y2="166" stroke="#52514e" stroke-width="1.5" marker-end="url(#ar)"/>
+
+<!-- skip: emb[t] -->
+<path d="M355,148 L355,290 L1060,290 L1060,166" fill="none" stroke="#52514e" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#ar)"/>
+<text x="700" y="284" text-anchor="middle" fill="#52514e" font-size="13">emb[t]：現在フレームの埋め込みを読み出しに直結（境界付近の座標の分解能のため）</text>
+
+<!-- ===== 3 models ===== -->
+<line x1="24" y1="318" x2="1376" y2="318" stroke="#e6e5e1" stroke-width="1.5"/>
+
+<!-- Transformer -->
+<text x="24" y="352" font-size="18" font-weight="bold" fill="#2a78d6">対照：因果 Transformer（4 層・幅 128・4 ヘッド）</text>
+<text x="24" y="374" fill="#52514e" font-size="14">過去を検索する。h_t は 0..t の全フレームへの注意。何も捨てない。</text>
+
+<!-- frames row -->
+<g font-size="13" text-anchor="middle">
+  <rect x="40" y="400" width="44" height="34" rx="4" fill="#e3edfa" stroke="#2a78d6"/><text x="62" y="422">emb₀</text>
+  <rect x="92" y="400" width="44" height="34" rx="4" fill="#e3edfa" stroke="#2a78d6"/><text x="114" y="422">emb₁</text>
+  <rect x="144" y="400" width="44" height="34" rx="4" fill="#e3edfa" stroke="#2a78d6"/><text x="166" y="422">emb₂</text>
+  <text x="212" y="422" fill="#52514e">…</text>
+  <rect x="236" y="400" width="44" height="34" rx="4" fill="#2a78d6" stroke="#2a78d6"/><text x="258" y="422" fill="#fff">emb_t</text>
+  <text x="304" y="422" fill="#52514e">…</text>
+  <rect x="328" y="400" width="56" height="34" rx="4" fill="#f4f4f2" stroke="#c3c2b7" stroke-dasharray="3,3"/><text x="356" y="422" fill="#8a8984">emb₄₉₉</text>
+  <text x="212" y="452" fill="#52514e">+ 位置埋め込み pos_i（学習）</text>
+</g>
+
+<!-- attention block -->
+<rect x="40" y="476" width="344" height="78" rx="6" fill="#fff" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="212" y="500" text-anchor="middle" font-weight="bold" fill="#2a78d6">Block × 4：LN → 因果注意 → LN → MLP</text>
+<text x="212" y="522" text-anchor="middle" fill="#52514e" font-size="13">h_t = Σ_{i≤t} w_{t,i} · v_i,  w = softmax(q_t·k_i / √d)</text>
+<text x="212" y="542" text-anchor="middle" fill="#52514e" font-size="13">i ≤ t だけを見る（未来は見ない）</text>
+
+<!-- arrows frames -> block (past only) -->
+<line x1="62" y1="434" x2="100" y2="474" stroke="#2a78d6" stroke-width="1.2" marker-end="url(#arb)"/>
+<line x1="114" y1="434" x2="140" y2="474" stroke="#2a78d6" stroke-width="1.2" marker-end="url(#arb)"/>
+<line x1="166" y1="434" x2="180" y2="474" stroke="#2a78d6" stroke-width="1.2" marker-end="url(#arb)"/>
+<line x1="258" y1="434" x2="240" y2="474" stroke="#2a78d6" stroke-width="1.2" marker-end="url(#arb)"/>
+<line x1="356" y1="434" x2="356" y2="474" stroke="#c3c2b7" stroke-width="1.2" stroke-dasharray="3,3"/>
+<text x="356" y="466" text-anchor="middle" font-size="11" fill="#8a8984">×</text>
+
+<line x1="212" y1="554" x2="212" y2="592" stroke="#2a78d6" stroke-width="1.5" marker-end="url(#arb)"/>
+<rect x="150" y="594" width="124" height="40" rx="6" fill="#2a78d6"/>
+<text x="212" y="619" text-anchor="middle" fill="#fff" font-weight="bold">h_t (128)</text>
+
+<rect x="40" y="660" width="344" height="60" rx="6" fill="#f4f4f2" stroke="none"/>
+<text x="52" y="684" fill="#0b0b0b" font-size="13">状態サイズ：t に比例（全フレームを保持）</text>
+<text x="52" y="706" fill="#0b0b0b" font-size="13">1 フレームの計算：t に比例　→ 終わりのないストリームには不向き</text>
+
+<!-- GRU -->
+<text x="490" y="352" font-size="18" font-weight="bold" fill="#eb6834">固定状態 1：GRU（隠れ 256 / 64 / 16 / 8 / 4）</text>
+<text x="490" y="374" fill="#52514e" font-size="14">過去を要約する。固定長ベクトルを 1 フレームごとに上書き。</text>
+
+<g font-size="13" text-anchor="middle">
+  <!-- chain -->
+  <rect x="500" y="470" width="54" height="34" rx="17" fill="#fff" stroke="#eb6834"/><text x="527" y="492">h_init</text>
+  <line x1="554" y1="487" x2="574" y2="487" stroke="#eb6834" stroke-width="1.5" marker-end="url(#aro)"/>
+  <rect x="576" y="466" width="52" height="42" rx="6" fill="#fdeae2" stroke="#eb6834"/><text x="602" y="492" font-weight="bold">GRU</text>
+  <line x1="628" y1="487" x2="648" y2="487" stroke="#eb6834" stroke-width="1.5" marker-end="url(#aro)"/>
+  <rect x="650" y="470" width="40" height="34" rx="17" fill="#fff" stroke="#eb6834"/><text x="670" y="492">h₀</text>
+  <line x1="690" y1="487" x2="710" y2="487" stroke="#eb6834" stroke-width="1.5" marker-end="url(#aro)"/>
+  <rect x="712" y="466" width="52" height="42" rx="6" fill="#fdeae2" stroke="#eb6834"/><text x="738" y="492" font-weight="bold">GRU</text>
+  <line x1="764" y1="487" x2="784" y2="487" stroke="#eb6834" stroke-width="1.5" marker-end="url(#aro)"/>
+  <rect x="786" y="470" width="40" height="34" rx="17" fill="#fff" stroke="#eb6834"/><text x="806" y="492">h₁</text>
+  <line x1="826" y1="487" x2="842" y2="487" stroke="#eb6834" stroke-width="1.5" marker-end="url(#aro)"/>
+  <text x="854" y="492" fill="#52514e">…</text>
+  <line x1="864" y1="487" x2="880" y2="487" stroke="#eb6834" stroke-width="1.5" marker-end="url(#aro)"/>
+  <rect x="882" y="466" width="52" height="42" rx="6" fill="#fdeae2" stroke="#eb6834"/><text x="908" y="492" font-weight="bold">GRU</text>
+  <line x1="934" y1="487" x2="952" y2="487" stroke="#eb6834" stroke-width="1.5" marker-end="url(#aro)"/>
+  <rect x="954" y="470" width="44" height="34" rx="17" fill="#eb6834"/><text x="976" y="492" fill="#fff" font-weight="bold">h_t</text>
+  <!-- inputs from below -->
+  <rect x="580" y="410" width="44" height="30" rx="4" fill="#e3edfa" stroke="#2a78d6"/><text x="602" y="430">emb₀</text>
+  <line x1="602" y1="440" x2="602" y2="464" stroke="#52514e" stroke-width="1.2" marker-end="url(#ar)"/>
+  <rect x="716" y="410" width="44" height="30" rx="4" fill="#e3edfa" stroke="#2a78d6"/><text x="738" y="430">emb₁</text>
+  <line x1="738" y1="440" x2="738" y2="464" stroke="#52514e" stroke-width="1.2" marker-end="url(#ar)"/>
+  <rect x="886" y="410" width="44" height="30" rx="4" fill="#2a78d6" stroke="#2a78d6"/><text x="908" y="430" fill="#fff">emb_t</text>
+  <line x1="908" y1="440" x2="908" y2="464" stroke="#52514e" stroke-width="1.2" marker-end="url(#ar)"/>
+</g>
+
+<rect x="500" y="540" width="420" height="92" rx="6" fill="#fff" stroke="#eb6834" stroke-width="1.5"/>
+<text x="514" y="564" font-weight="bold" fill="#eb6834">1 ステップの更新</text>
+<text x="514" y="586" fill="#52514e" font-size="13">z = σ(W_z [h_{t−1}, x_t])　　　どの成分を更新するか (0..1)</text>
+<text x="514" y="606" fill="#52514e" font-size="13">h̃ = tanh(W_h [r ⊙ h_{t−1}, x_t])　新しい候補</text>
+<text x="514" y="626" fill="#52514e" font-size="13">h_t = (1 − z) ⊙ h_{t−1} + z ⊙ h̃　　混ぜる（z≈0 の成分は残り続ける）</text>
+
+<rect x="500" y="660" width="420" height="60" rx="6" fill="#f4f4f2" stroke="none"/>
+<text x="512" y="684" fill="#0b0b0b" font-size="13">状態サイズ：一定（隠れ次元）　1 フレームの計算：一定</text>
+<text x="512" y="706" fill="#0b0b0b" font-size="13">古い情報は、更新を生き延びた分だけ「薄れて」残る</text>
+
+<!-- Window -->
+<text x="990" y="352" font-size="18" font-weight="bold" fill="#1baf7a">固定状態 2：窓つき Transformer（W = 32 / 128）</text>
+<text x="990" y="374" fill="#52514e" font-size="14">直近だけ保持する。状態は文字通り「直近 W フレーム」。</text>
+
+<g font-size="12" text-anchor="middle">
+  <!-- outside window (grey) -->
+  <rect x="1000" y="400" width="38" height="34" rx="4" fill="#f4f4f2" stroke="#c3c2b7" stroke-dasharray="3,3"/><text x="1019" y="422" fill="#8a8984">emb₀</text>
+  <text x="1050" y="422" fill="#8a8984">…</text>
+  <!-- window (green) -->
+  <rect x="1060" y="392" width="254" height="50" rx="6" fill="#e2f5ec" stroke="#1baf7a" stroke-width="1.5"/>
+  <rect x="1068" y="400" width="74" height="34" rx="4" fill="#fff" stroke="#1baf7a"/><text x="1105" y="422">emb_{t−W+1}</text>
+  <text x="1154" y="422" fill="#52514e">…</text>
+  <rect x="1166" y="400" width="62" height="34" rx="4" fill="#fff" stroke="#1baf7a"/><text x="1197" y="422">emb_{t−1}</text>
+  <rect x="1236" y="400" width="52" height="34" rx="4" fill="#1baf7a" stroke="#1baf7a"/><text x="1262" y="422" fill="#fff">emb_t</text>
+  <!-- outside right -->
+  <text x="1326" y="422" fill="#8a8984">…</text>
+  <rect x="1338" y="400" width="38" height="34" rx="4" fill="#f4f4f2" stroke="#c3c2b7" stroke-dasharray="3,3"/><text x="1357" y="422" fill="#8a8984">未来</text>
+  <text x="1187" y="458" fill="#1baf7a" font-size="13">窓 W フレーム（これ以外は存在しない）</text>
+  <text x="1030" y="458" fill="#8a8984">見えない</text>
+</g>
+
+<line x1="1185" y1="466" x2="1185" y2="490" stroke="#1baf7a" stroke-width="1.5" marker-end="url(#arg)"/>
+<rect x="1000" y="492" width="370" height="64" rx="6" fill="#fff" stroke="#1baf7a" stroke-width="1.5"/>
+<text x="1185" y="516" text-anchor="middle" font-weight="bold" fill="#1baf7a">因果 Transformer（4 層）を窓の中だけで実行</text>
+<text x="1185" y="538" text-anchor="middle" fill="#52514e" font-size="13">窓内の位置埋め込み 0..W−1、t &lt; W−1 の分は pad 埋め込み</text>
+
+<line x1="1185" y1="556" x2="1185" y2="592" stroke="#1baf7a" stroke-width="1.5" marker-end="url(#arg)"/>
+<rect x="1123" y="594" width="124" height="40" rx="6" fill="#1baf7a"/>
+<text x="1185" y="619" text-anchor="middle" fill="#fff" font-weight="bold">最後の位置 = h_t</text>
+
+<rect x="1000" y="660" width="376" height="60" rx="6" fill="#f4f4f2" stroke="none"/>
+<text x="1012" y="684" fill="#0b0b0b" font-size="13">状態サイズ：W に比例　質問 1 つの計算：W² に比例</text>
+<text x="1012" y="706" fill="#0b0b0b" font-size="13">窓は物理的に切る（マスクだと受容野が層ごとに広がる）</text>
+
+<!-- ===== bottom summary ===== -->
+<line x1="24" y1="750" x2="1376" y2="750" stroke="#e6e5e1" stroke-width="1.5"/>
+<text x="24" y="784" font-size="16" font-weight="bold" fill="#0b0b0b">3 つの違いを 1 行で</text>
+<text x="24" y="812" font-size="15"><tspan fill="#2a78d6" font-weight="bold">Transformer</tspan> は過去を<tspan font-weight="bold">検索</tspan>する　　<tspan fill="#eb6834" font-weight="bold">GRU</tspan> は過去を<tspan font-weight="bold">要約</tspan>する　　<tspan fill="#1baf7a" font-weight="bold">窓つき</tspan> は<tspan font-weight="bold">直近だけ保持</tspan>する</text>
+<text x="24" y="844" font-size="14" fill="#52514e">入力埋め込み・質問埋め込み・読み出し・損失（交差エントロピーのみ）・データは 3 モデルで同一。差が出たら原因は「過去の持ち方」に絞れる。</text>
+<text x="24" y="868" font-size="14" fill="#52514e">忘却の正直さを分けたのは、忘れ方の滑らかさではなく、根拠を失った痕跡が状態に残るか（GRU は薄れて残る、窓は丸ごと無い）だった。</text>
+</svg>

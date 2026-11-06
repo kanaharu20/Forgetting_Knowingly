@@ -1,0 +1,17 @@
+# 公開するものだけを列挙する。ここにないファイルはすべて無視される。
+# 新しく公開したいファイルは、下に `!` の行を足す。
+/*
+!/.gitignore
+!/.python-version
+!/pyproject.toml
+!/uv.lock
+
+!/bouncing/
+/bouncing/*
+!/bouncing/*.py
+!/bouncing/models/
+!/bouncing/figures/
+
+# Python-generated files
+__pycache__/
+*.py[oc]
