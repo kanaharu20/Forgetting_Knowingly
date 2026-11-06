@@ -16,3 +16,7 @@
 # Python-generated files
 __pycache__/
 *.py[oc]
+
+# 公開しない .py（bouncing/*.py の例外）
+/bouncing/jev_probe.py
+/bouncing/plot_jev.py

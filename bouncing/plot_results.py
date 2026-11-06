@@ -26,6 +26,9 @@ from data import QTYPE
 from questions import QTYPE_NAMES, LAST_HIT, EVER_HIT, MOST_HITS
 
 COLORS = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100"]      # 順序固定：run ごとに1色
+# --ordered: 大きさの順に並んだ run（状態サイズ、λ など）を青の単色で薄→濃に塗る
+ORDERED = {4: ["#86b6ef", "#3987e5", "#1c5cab", "#0d366b"],
+           5: ["#86b6ef", "#3987e5", "#256abf", "#184f95", "#0d366b"]}
 
 
 import json
@@ -72,7 +75,12 @@ def main():
     ap.add_argument("files", nargs="+", help="<run>/<split>_probs.npz, one per model")
     ap.add_argument("--out", default="results.png")
     ap.add_argument("--width", type=int, default=25, help="distance bin width in frames")
+    ap.add_argument("--ordered", action="store_true",
+                    help="runs are given in increasing order of one setting; colour them light -> dark")
     a = ap.parse_args()
+    colors = ORDERED.get(len(a.files)) if a.ordered else COLORS
+    if colors is None or len(a.files) > len(colors):
+        raise SystemExit(f"{len(a.files)} runs: at most {len(COLORS)} (or 4-5 with --ordered)")
 
     runs = [(Path(f).parent.name, load_curves(f, a.width)) for f in a.files]
     T = max(t for _, (t, _) in runs)
@@ -81,7 +89,7 @@ def main():
                              gridspec_kw=dict(height_ratios=[1.6, 1], hspace=0.12, wspace=0.18))
     for col, k in enumerate(qtypes):
         top, bot = axes[0, col], axes[1, col]
-        for (name, (_, cv)), c in zip(runs, COLORS):
+        for (name, (_, cv)), c in zip(runs, colors):
             x, acc, conf, ne = cv[QTYPE_NAMES[k]]
             top.plot(x, acc, "-", color=c, lw=2, label=f"{name}: accuracy")
             top.plot(x, conf, color=c, lw=1.6, ls=(0, (4, 2)), label=f"{name}: mean confidence")
